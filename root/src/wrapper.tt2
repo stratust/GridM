@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    [% IF no_wrapper %]
+    [% content %]
+    [% ELSE %]
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+    <title>[% template.title or "GRID Manager" %]</title>
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/menu_style.css') %]" />
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/forms.css') %]" />
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/typography.css') %]" />
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/smoothness/jquery-ui-1.8.1.custom.css') %]" />
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/flexigrid.css') %]" />
+	<link rel="stylesheet" href="[% c.uri_for('/static/css/layout.css') %]" />
+	<script type="text/javascript" src="[% c.uri_for('/static/js/jquery-1.4.2.min.js') %]"></script>
+    <script type="text/javascript" src="[% c.uri_for('/static/js/flexigrid.js') %]"></script>
+	<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.form.js') %]"></script>
+	<script type="text/javascript" src="[% c.uri_for('/static/js/ui/jquery-ui-1.8.1.custom.min.js') %]"></script>
+	<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.validate.js') %]"></script>
+	<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.maskedinput-1.2.2.min.js') %]"></script>
+	<script type="text/javascript" src="[% c.uri_for('/static/js/jquery.hoverIntent.minified.js') %]"></script>
+    </head>
+    
+	<body>
+		<div class="header">
+			<img src="/static/images/grid.png" alt ="GRID Solutions"/>
+		</div>
+		<div id="utilities">
+<div class="menu bubplastic horizontal aqua">
+	<ul>
+		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/search') %]"><span class="menu_ar">Advanced Search</span></a></span></li>
+		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/evento') %]"><span class="menu_ar">Evento</span></a></span></li>
+		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/sala') %]"><span class="menu_ar">Sala</span></a></span></li>
+		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/salaantena') %]"><span class="menu_ar">Sala Antena</span></a></span></li>
+
+		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/antena') %]"><span class="menu_ar">Antena</span></a></span></li>
+		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/leitor') %]"><span class="menu_ar">Leitor</span></a></span></li>
+		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/leitura') %]"><span class="menu_ar">Leitura</span></a></span></li>
+		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/participante') %]"><span class="menu_ar">Participante</span></a></span></li>
+	</ul>
+	<br class="clearit" />
+</div>
+
+	</div>
+ 
+    <div id="page">
+    <div id="header">
+        [%# Your logo could go here -%]
+        [%# Insert the page title -%]
+    </div>
+	
+	<div id="submenu">
+ 			<ul class="links tabs">
+				[% IF c.user_exists %]
+				[% IF c.check_user_roles( 'Administrator' ) %]
+	            <li><a href="[% c.uri_for('/ajax/evento') %]" title="Evento">Evento</a></li>
+    	        <li><a href="[% c.uri_for('/ajax/sala') %]" title="Sala">Sala</a></li>
+        	   	<li><a href="[% c.uri_for('/ajax/salaantena') %]" title="Sala Antena">Sala Antena</a></li>
+				<li><a href="[% c.uri_for('/ajax/antena') %]" title="Antena">Antena</a></li>
+				<li><a href="[% c.uri_for('/ajax/leitor') %]" title="Leitor">Roles</a></li>
+				<li><a href="[% c.uri_for('/ajax/leitura') %]" title="Leitura">Leitura</a></li>
+				[% END %]
+				<li><a href="[% c.uri_for('/members/edit') %]" title="Roles">Editar Cadastro</a></li>
+				<li><a href="[% c.uri_for('/logout') %]" title="Logout">Logout</a></li>
+				[% END %]
+
+        	</ul>
+	</div>	
+
+	<div class="wrapper">
+		[% IF c.user_exists %]
+		<div class="user_info"><b>User:</b> [% c.user.get('name') %]</div>
+		[% END %]
+	
+		[% IF tt_shortcol %]	
+		<div id="primary" class="short">
+		[% ELSE %]
+		<div id="primary" class="long">
+		[% END %]
+			<div class="singlepage">
+				
+			<h1>[% template.title or site.title %]</h1>
+        	[%# Status and error messages %]
+	        <span class="message">[% status_msg || c.request.params.status_msg %]</span>
+    	    <span class="error">[% error_msg || c.request.params.erro_msg %]</span>
+	        [%# This is where TT will stick all of your template's contents. -%]
+			[% content %]
+			</div>
+		</div>
+		<div class="lsidebar">
+		</div>
+		<div class="rsidebar">
+		</div>
+		<div class="clear"></div>
+    </div><!-- end wrapper -->
+    </div><!-- end pageblock -->
+    
+	<div id="footer">
+		Copyright(C) - GRID
+	</div>
+    
+    </body>
+	</html>
+	[% END %]

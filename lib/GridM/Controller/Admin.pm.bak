@@ -1,0 +1,895 @@
+package GridM::Controller::Admin::Evento;
+use Moose;
+use namespace::autoclean;
+use GridM::Form::Evento;
+
+BEGIN { extends 'Catalyst::Controller'; }
+
+=head1 NAME
+
+GridM::Controller::Admin::Evento - Catalyst Controller
+
+=head1 DESCRIPTION
+
+Catalyst Controller.
+
+=head1 METHODS
+
+=cut
+
+=head2 index
+
+=cut
+
+sub index : Path : Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->go('list');
+}
+
+=head2 base
+
+  Can place common logic to start chained dispatch here
+
+=cut
+
+sub base : Chained('/') : PathPart('admin/evento') : CaptureArgs(0) {
+
+    my ( $self, $c ) = @_;
+
+    #if ( $c->user_exists() ) {
+
+    #   if ( $c->check_user_roles(qw/ Administrator /) ) {
+
+    # Store the ResultSet in stash so it's available for other methods
+    $c->stash( resultset => $c->model('Ash2010::Evento') );
+
+    # Print a message to the debug log
+    $c->log->debug('*** INSIDE BASE METHOD ***');
+
+=cut
+	    }
+	    else {
+
+	       $c->detach('/access_denied');
+
+	    }
+
+	}
+	else {
+
+	    $c->detach('/login');
+
+	}
+=cut
+
+}
+
+=head2 object
+    
+    Fetch the specified member type object based on the member type ID and store
+    it in the stash
+
+=cut
+
+sub object : Chained('base') : PathPart('id') : CaptureArgs(1) {
+
+    # $id = primary key of book to edit
+    my ( $self, $c, $id ) = @_;
+
+    # Find the book object and store it in the stash
+    $c->stash( object => $c->stash->{resultset}->find($id) );
+
+    # Make sure the lookup was successful.  You would probably
+    # want to do something like this in a real app:
+    #   $c->detach('/error_404') if !$c->stash->{object};
+    die "Object $id not found!" if !$c->stash->{object};
+
+    # Print a message to the debug log
+    $c->log->debug("*** INSIDE OBJECT METHOD for obj id=$id ***");
+}
+
+=head2 create
+    
+	Create a new registry
+    
+=cut
+
+sub create : Chained('base') PathPart('create') Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $new_object = $c->model('Ash2010::Evento')->new_result( {} );
+    return $self->_form( $c, $new_object );
+}
+
+=head2 edit
+    
+	Edit a register based on given  object
+    
+=cut
+
+sub edit : Chained('object') PathPart('edit') Args(0) {
+    my ( $self, $c ) = @_;
+
+    return $self->_form( $c, $c->stash->{object} );
+}
+
+=head2 _form
+    
+	Generate a form to create/edit a given object
+    
+=cut
+
+sub _form {
+    my ( $self, $c, $new_object ) = @_;
+    my $form = GridM::Form::Evento->new;
+
+    # Set the template
+    $c->stash( template => 'admin/edit.tt2', form => $form );
+    $form->process( item => $new_object, params => $c->req->params );
+    return unless $form->validated;
+
+    # Redirect the user back to the list page
+    $c->response->redirect( $c->uri_for( $self->action_for('list') ) );
+
+}
+
+=head1 AUTHOR
+
+,,,
+
+=head1 LICENSE
+
+This library is free software. You can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+__PACKAGE__->meta->make_immutable;
+
+package GridM::Controller::Admin::Sala;
+use Moose;
+use namespace::autoclean;
+use GridM::Form::Sala;
+
+BEGIN { extends 'Catalyst::Controller'; }
+
+=head1 NAME
+
+GridM::Controller::Admin::Sala - Catalyst Controller
+
+=head1 DESCRIPTION
+
+Catalyst Controller.
+
+=head1 METHODS
+
+=cut
+
+=head2 index
+
+=cut
+
+sub index : Path : Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->go('list');
+}
+
+=head2 base
+
+  Can place common logic to start chained dispatch here
+
+=cut
+
+sub base : Chained('/') : PathPart('admin/sala') : CaptureArgs(0) {
+
+    my ( $self, $c ) = @_;
+
+    #if ( $c->user_exists() ) {
+
+    #   if ( $c->check_user_roles(qw/ Administrator /) ) {
+
+    # Store the ResultSet in stash so it's available for other methods
+    $c->stash( resultset => $c->model('Ash2010::Sala') );
+
+    # Print a message to the debug log
+    $c->log->debug('*** INSIDE BASE METHOD ***');
+
+=cut
+	    }
+	    else {
+
+	       $c->detach('/access_denied');
+
+	    }
+
+	}
+	else {
+
+	    $c->detach('/login');
+
+	}
+=cut
+
+}
+
+=head2 object
+    
+    Fetch the specified member type object based on the member type ID and store
+    it in the stash
+
+=cut
+
+sub object : Chained('base') : PathPart('id') : CaptureArgs(1) {
+
+    # $id = primary key of book to edit
+    my ( $self, $c, $id ) = @_;
+
+    # Find the book object and store it in the stash
+    $c->stash( object => $c->stash->{resultset}->find($id) );
+
+    # Make sure the lookup was successful.  You would probably
+    # want to do something like this in a real app:
+    #   $c->detach('/error_404') if !$c->stash->{object};
+    die "Object $id not found!" if !$c->stash->{object};
+
+    # Print a message to the debug log
+    $c->log->debug("*** INSIDE OBJECT METHOD for obj id=$id ***");
+}
+
+=head2 create
+    
+	Create a new registry
+    
+=cut
+
+sub create : Chained('base') PathPart('create') Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $new_object = $c->model('Ash2010::Sala')->new_result( {} );
+    return $self->_form( $c, $new_object );
+}
+
+=head2 edit
+    
+	Edit a register based on given  object
+    
+=cut
+
+sub edit : Chained('object') PathPart('edit') Args(0) {
+    my ( $self, $c ) = @_;
+
+    return $self->_form( $c, $c->stash->{object} );
+}
+
+=head2 _form
+    
+	Generate a form to create/edit a given object
+    
+=cut
+
+sub _form {
+    my ( $self, $c, $new_object ) = @_;
+    my $form = GridM::Form::Sala->new;
+
+    # Set the template
+    $c->stash( template => 'admin/edit.tt2', form => $form );
+    $form->process( item => $new_object, params => $c->req->params );
+    return unless $form->validated;
+
+    # Redirect the user back to the list page
+    $c->response->redirect( $c->uri_for( $self->action_for('list') ) );
+
+}
+
+=head1 AUTHOR
+
+,,,
+
+=head1 LICENSE
+
+This library is free software. You can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+__PACKAGE__->meta->make_immutable;
+
+package GridM::Controller::Admin::Antena;
+use Moose;
+use namespace::autoclean;
+use GridM::Form::Antena;
+
+BEGIN { extends 'Catalyst::Controller'; }
+
+=head1 NAME
+
+GridM::Controller::Admin::Antena - Catalyst Controller
+
+=head1 DESCRIPTION
+
+Catalyst Controller.
+
+=head1 METHODS
+
+=cut
+
+=head2 index
+
+=cut
+
+sub index : Path : Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->go('list');
+}
+
+=head2 base
+
+  Can place common logic to start chained dispatch here
+
+=cut
+
+sub base : Chained('/') : PathPart('admin/antena') : CaptureArgs(0) {
+
+    my ( $self, $c ) = @_;
+
+    #if ( $c->user_exists() ) {
+
+    #   if ( $c->check_user_roles(qw/ Administrator /) ) {
+
+    # Store the ResultSet in stash so it's available for other methods
+    $c->stash( resultset => $c->model('Ash2010::Antena') );
+
+    # Print a message to the debug log
+    $c->log->debug('*** INSIDE BASE METHOD ***');
+
+=cut
+	    }
+	    else {
+
+	       $c->detach('/access_denied');
+
+	    }
+
+	}
+	else {
+
+	    $c->detach('/login');
+
+	}
+=cut
+
+}
+
+=head2 object
+    
+    Fetch the specified member type object based on the member type ID and store
+    it in the stash
+
+=cut
+
+sub object : Chained('base') : PathPart('id') : CaptureArgs(1) {
+
+    # $id = primary key of book to edit
+    my ( $self, $c, $id ) = @_;
+
+    # Find the book object and store it in the stash
+    $c->stash( object => $c->stash->{resultset}->find($id) );
+
+    # Make sure the lookup was successful.  You would probably
+    # want to do something like this in a real app:
+    #   $c->detach('/error_404') if !$c->stash->{object};
+    die "Object $id not found!" if !$c->stash->{object};
+
+    # Print a message to the debug log
+    $c->log->debug("*** INSIDE OBJECT METHOD for obj id=$id ***");
+}
+
+=head2 create
+    
+	Create a new registry
+    
+=cut
+
+sub create : Chained('base') PathPart('create') Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $new_object = $c->model('Ash2010::Antena')->new_result( {} );
+    return $self->_form( $c, $new_object );
+}
+
+=head2 edit
+    
+	Edit a register based on given  object
+    
+=cut
+
+sub edit : Chained('object') PathPart('edit') Args(0) {
+    my ( $self, $c ) = @_;
+
+    return $self->_form( $c, $c->stash->{object} );
+}
+
+=head2 _form
+    
+	Generate a form to create/edit a given object
+    
+=cut
+
+sub _form {
+    my ( $self, $c, $new_object ) = @_;
+    my $form = GridM::Form::Antena->new;
+
+    # Set the template
+    $c->stash( template => 'admin/edit.tt2', form => $form );
+    $form->process( item => $new_object, params => $c->req->params );
+    return unless $form->validated;
+
+    # Redirect the user back to the list page
+    $c->response->redirect( $c->uri_for( $self->action_for('list') ) );
+
+}
+
+=head1 AUTHOR
+
+,,,
+
+=head1 LICENSE
+
+This library is free software. You can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+__PACKAGE__->meta->make_immutable;
+
+package GridM::Controller::Admin::Leitor;
+use Moose;
+use namespace::autoclean;
+use GridM::Form::Leitor;
+
+BEGIN { extends 'Catalyst::Controller'; }
+
+=head1 NAME
+
+GridM::Controller::Admin::Leitor - Catalyst Controller
+
+=head1 DESCRIPTION
+
+Catalyst Controller.
+
+=head1 METHODS
+
+=cut
+
+=head2 index
+
+=cut
+
+sub index : Path : Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->go('list');
+}
+
+=head2 base
+
+  Can place common logic to start chained dispatch here
+
+=cut
+
+sub base : Chained('/') : PathPart('admin/leitor') : CaptureArgs(0) {
+
+    my ( $self, $c ) = @_;
+
+    #if ( $c->user_exists() ) {
+
+    #   if ( $c->check_user_roles(qw/ Administrator /) ) {
+
+    # Store the ResultSet in stash so it's available for other methods
+    $c->stash( resultset => $c->model('Ash2010::Leitor') );
+
+    # Print a message to the debug log
+    $c->log->debug('*** INSIDE BASE METHOD ***');
+
+=cut
+	    }
+	    else {
+
+	       $c->detach('/access_denied');
+
+	    }
+
+	}
+	else {
+
+	    $c->detach('/login');
+
+	}
+=cut
+
+}
+
+=head2 object
+    
+    Fetch the specified member type object based on the member type ID and store
+    it in the stash
+
+=cut
+
+sub object : Chained('base') : PathPart('id') : CaptureArgs(1) {
+
+    # $id = primary key of book to edit
+    my ( $self, $c, $id ) = @_;
+
+    # Find the book object and store it in the stash
+    $c->stash( object => $c->stash->{resultset}->find($id) );
+
+    # Make sure the lookup was successful.  You would probably
+    # want to do something like this in a real app:
+    #   $c->detach('/error_404') if !$c->stash->{object};
+    die "Object $id not found!" if !$c->stash->{object};
+
+    # Print a message to the debug log
+    $c->log->debug("*** INSIDE OBJECT METHOD for obj id=$id ***");
+}
+
+=head2 create
+    
+	Create a new registry
+    
+=cut
+
+sub create : Chained('base') PathPart('create') Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $new_object = $c->model('Ash2010::Leitor')->new_result( {} );
+    return $self->_form( $c, $new_object );
+}
+
+=head2 edit
+    
+	Edit a register based on given  object
+    
+=cut
+
+sub edit : Chained('object') PathPart('edit') Args(0) {
+    my ( $self, $c ) = @_;
+
+    return $self->_form( $c, $c->stash->{object} );
+}
+
+=head2 _form
+    
+	Generate a form to create/edit a given object
+    
+=cut
+
+sub _form {
+    my ( $self, $c, $new_object ) = @_;
+    my $form = GridM::Form::Leitor->new;
+
+    # Set the template
+    $c->stash( template => 'admin/edit.tt2', form => $form );
+    $form->process( item => $new_object, params => $c->req->params );
+    return unless $form->validated;
+
+    # Redirect the user back to the list page
+    $c->response->redirect( $c->uri_for( $self->action_for('list') ) );
+
+}
+
+=head1 AUTHOR
+
+,,,
+
+=head1 LICENSE
+
+This library is free software. You can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+__PACKAGE__->meta->make_immutable;
+
+package GridM::Controller::Admin::Leitura;
+use Moose;
+use namespace::autoclean;
+use GridM::Form::Leitura;
+
+BEGIN { extends 'Catalyst::Controller'; }
+
+=head1 NAME
+
+GridM::Controller::Admin::Leitura - Catalyst Controller
+
+=head1 DESCRIPTION
+
+Catalyst Controller.
+
+=head1 METHODS
+
+=cut
+
+=head2 index
+
+=cut
+
+sub index : Path : Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->go('list');
+}
+
+=head2 base
+
+  Can place common logic to start chained dispatch here
+
+=cut
+
+sub base : Chained('/') : PathPart('admin/leitura') : CaptureArgs(0) {
+
+    my ( $self, $c ) = @_;
+
+    #if ( $c->user_exists() ) {
+
+    #   if ( $c->check_user_roles(qw/ Administrator /) ) {
+
+    # Store the ResultSet in stash so it's available for other methods
+    $c->stash( resultset => $c->model('Ash2010::Leitura') );
+
+    # Print a message to the debug log
+    $c->log->debug('*** INSIDE BASE METHOD ***');
+
+=cut
+	    }
+	    else {
+
+	       $c->detach('/access_denied');
+
+	    }
+
+	}
+	else {
+
+	    $c->detach('/login');
+
+	}
+=cut
+
+}
+
+=head2 object
+    
+    Fetch the specified member type object based on the member type ID and store
+    it in the stash
+
+=cut
+
+sub object : Chained('base') : PathPart('id') : CaptureArgs(1) {
+
+    # $id = primary key of book to edit
+    my ( $self, $c, $id ) = @_;
+
+    # Find the book object and store it in the stash
+    $c->stash( object => $c->stash->{resultset}->find($id) );
+
+    # Make sure the lookup was successful.  You would probably
+    # want to do something like this in a real app:
+    #   $c->detach('/error_404') if !$c->stash->{object};
+    die "Object $id not found!" if !$c->stash->{object};
+
+    # Print a message to the debug log
+    $c->log->debug("*** INSIDE OBJECT METHOD for obj id=$id ***");
+}
+
+=head2 create
+    
+	Create a new registry
+    
+=cut
+
+sub create : Chained('base') PathPart('create') Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $new_object = $c->model('Ash2010::Leitura')->new_result( {} );
+    return $self->_form( $c, $new_object );
+}
+
+=head2 edit
+    
+	Edit a register based on given  object
+    
+=cut
+
+sub edit : Chained('object') PathPart('edit') Args(0) {
+    my ( $self, $c ) = @_;
+
+    return $self->_form( $c, $c->stash->{object} );
+}
+
+=head2 _form
+    
+	Generate a form to create/edit a given object
+    
+=cut
+
+sub _form {
+    my ( $self, $c, $new_object ) = @_;
+    my $form = GridM::Form::Leitura->new;
+
+    # Set the template
+    $c->stash( template => 'admin/edit.tt2', form => $form );
+    $form->process( item => $new_object, params => $c->req->params );
+    return unless $form->validated;
+
+    # Redirect the user back to the list page
+    $c->response->redirect( $c->uri_for( $self->action_for('list') ) );
+
+}
+
+=head1 AUTHOR
+
+,,,
+
+=head1 LICENSE
+
+This library is free software. You can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+__PACKAGE__->meta->make_immutable;
+
+package GridM::Controller::Admin::Participante;
+use Moose;
+use namespace::autoclean;
+use GridM::Form::Participante;
+
+BEGIN { extends 'Catalyst::Controller'; }
+
+=head1 NAME
+
+GridM::Controller::Admin::Participante - Catalyst Controller
+
+=head1 DESCRIPTION
+
+Catalyst Controller.
+
+=head1 METHODS
+
+=cut
+
+=head2 index
+
+=cut
+
+sub index : Path : Args(0) {
+    my ( $self, $c ) = @_;
+
+    $c->go('list');
+}
+
+=head2 base
+
+  Can place common logic to start chained dispatch here
+
+=cut
+
+sub base : Chained('/') : PathPart('admin/participante') : CaptureArgs(0) {
+
+    my ( $self, $c ) = @_;
+
+    #if ( $c->user_exists() ) {
+
+    #   if ( $c->check_user_roles(qw/ Administrator /) ) {
+
+    # Store the ResultSet in stash so it's available for other methods
+    $c->stash( resultset => $c->model('Ash2010::Participante') );
+
+    # Print a message to the debug log
+    $c->log->debug('*** INSIDE BASE METHOD ***');
+
+=cut
+	    }
+	    else {
+
+	       $c->detach('/access_denied');
+
+	    }
+
+	}
+	else {
+
+	    $c->detach('/login');
+
+	}
+=cut
+
+}
+
+=head2 object
+    
+    Fetch the specified member type object based on the member type ID and store
+    it in the stash
+
+=cut
+
+sub object : Chained('base') : PathPart('id') : CaptureArgs(1) {
+
+    # $id = primary key of book to edit
+    my ( $self, $c, $id ) = @_;
+
+    # Find the book object and store it in the stash
+    $c->stash( object => $c->stash->{resultset}->find($id) );
+
+    # Make sure the lookup was successful.  You would probably
+    # want to do something like this in a real app:
+    #   $c->detach('/error_404') if !$c->stash->{object};
+    die "Object $id not found!" if !$c->stash->{object};
+
+    # Print a message to the debug log
+    $c->log->debug("*** INSIDE OBJECT METHOD for obj id=$id ***");
+}
+
+=head2 create
+    
+	Create a new registry
+    
+=cut
+
+sub create : Chained('base') PathPart('create') Args(0) {
+    my ( $self, $c ) = @_;
+
+    my $new_object = $c->model('Ash2010::Participante')->new_result( {} );
+    return $self->_form( $c, $new_object );
+}
+
+=head2 edit
+    
+	Edit a register based on given  object
+    
+=cut
+
+sub edit : Chained('object') PathPart('edit') Args(0) {
+    my ( $self, $c ) = @_;
+
+    return $self->_form( $c, $c->stash->{object} );
+}
+
+=head2 _form
+    
+	Generate a form to create/edit a given object
+    
+=cut
+
+sub _form {
+    my ( $self, $c, $new_object ) = @_;
+    my $form = GridM::Form::Participante->new;
+
+    # Set the template
+    $c->stash( template => 'admin/edit.tt2', form => $form );
+    $form->process( item => $new_object, params => $c->req->params );
+    return unless $form->validated;
+
+    # Redirect the user back to the list page
+    $c->response->redirect( $c->uri_for( $self->action_for('list') ) );
+
+}
+
+=head1 AUTHOR
+
+,,,
+
+=head1 LICENSE
+
+This library is free software. You can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
+
+__PACKAGE__->meta->make_immutable;
+
+

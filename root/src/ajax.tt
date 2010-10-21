@@ -1,0 +1,231 @@
+    <table id="registers_grid" style="display:none">
+	</table>
+    <div id="register_form" style="display:none; text-align:left"></div>
+	<div id="dialog" title="Delete selected items?" style="display:none;">
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>These items will be permanently deleted and cannot be recovered. Are you sure?</p>
+
+
+    <style type="text/css">
+    .flexigrid div.fbutton .add
+    {   
+    background: url([% c.uri_for('/static/images/flexigrid/add.png') %]) no-repeat center left;
+    }
+    .flexigrid div.fbutton .edit
+    {   
+    background: url([% c.uri_for('/static/images/flexigrid/edit-icon.png') %]) no-repeat center left;
+    }
+    .flexigrid div.fbutton .delete
+    {   
+    background: url([% c.uri_for('/static/images/flexigrid/close.png') %]) no-repeat center left;
+    </style>
+
+    <script type="text/javascript">
+<!--	
+	$(document).ready(function(){
+			$("#register_form").dialog({
+			autoOpen: false,
+			title: '[% tablename %] Form',
+			resizable: false,
+			width: 600,
+			maxWidth: 700,
+			modal: true,
+		});
+	});
+
+
+	function add_register(button, grid) {
+        var form_div = $('#register_form');
+
+        form_div.load('/ajax/register_form_add/[% tablename %]', null, function() {
+            $('#register_form form').ajaxForm({
+				url: '/ajax/register_form_add/[% tablename %]',
+				beforeSubmit: validate_form,
+				success: function(){
+					$("#register_form").dialog('close');
+					$('#registers_grid').flexReload();
+				} 
+					
+            });
+            //form_div.show();
+			$("#register_form").dialog('open');
+
+        });
+    }
+
+	
+	function validate_form(){
+		myform =  $("#register_form form");
+		myform.validate();
+
+		if (myform.valid()){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}	
+
+    function edit_register(button, grid) {
+        var id = $('.trSelected', grid).attr('id');
+ 	    var form_div = $('#register_form');
+ 		id = id.substring(id.lastIndexOf('row')+3);
+
+        var url = '/ajax/register_form_edit/[% tablename %]/' + id;
+                                                                                
+		if ( id ){
+				form_div.load(url, null, function() {
+					$('#register_form form').ajaxForm({
+						url: url,
+						beforeSubmit: validate_form,
+						success: function() {
+							$("#register_form").dialog('close');
+							$('#registers_grid').flexReload();
+						},
+						error: function(xhr, ajaxOptions, thrownError){
+							alert('erro');
+						}
+					});
+					$("#register_form").dialog('open');
+		   
+				});
+		}
+		else{
+			var $dialog = $('<div></div>')
+			.html('Please select an row before edit!')
+			.dialog({
+				autoOpen: false,
+				title: 'Select a row',
+				resizable: false,
+				height:140,
+				modal: true,
+				buttons: {
+					OK: function() {
+						$(this).dialog('close');
+					}
+				}
+			});
+			$dialog.dialog('open');
+
+
+		}
+    }
+
+	function delete_confirm(button, grid) {
+		
+		$("#dialog").dialog("destroy");
+		$("#dialog").dialog({
+			autoOpen: false,
+			resizable: false,
+			height:140,
+			modal: true,
+			buttons: {
+				'Delete all items': function() {
+					delete_register(button,grid);
+					$(this).dialog('close');
+				},
+				Cancel: function() {
+					$(this).dialog('close');
+				}
+			}
+		});
+		
+		$("#dialog").dialog('open');
+
+	}
+
+
+
+	function delete_register(button, grid) {
+		var total_count = $('.trSelected', grid).length;
+        var deleted     = 0;
+
+        $.each($('.trSelected', grid), function() {
+        	var id = $('.trSelected', grid).attr('id');
+	 		id = id.substring(id.lastIndexOf('row')+3);
+
+            $.ajax({
+                url: '/api/register/' + id,
+                type: 'DELETE',
+                data: {
+					tname: "[% tablename %]"
+				},
+                dataType: 'json',
+                success: function() {
+                    deleted++;
+                    if (deleted == total_count) {
+                        $('#registers_grid').flexReload();
+                    }
+                },
+				error:function (xhr, ajaxOptions, thrownError){
+						var $dialog = $('<div></div>')
+						.html('An error occurred on delete resquest! Maybe the field is a foreign key in another table?')
+						.dialog({
+							autoOpen: false,
+							title: 'Error on Delete',
+							resizable: false,
+							height:140,
+							modal: true,
+							buttons: {
+								OK: function() {
+									$(this).dialog('close');
+								}
+							}
+
+						});
+
+						$dialog.dialog('open');
+
+                }    
+            });
+        });
+	}
+
+    $("#registers_grid").flexigrid({
+        url: '/api/grid',
+        dataType: 'json',
+		colModel : [
+		[% FOREACH col IN columns -%]
+			[% IF col != columns.last -%]
+				{display: '[% col %]', name : '[% col %]', width : 200, sortable : true},
+			[% ELSE%]
+				{display: '[% col %]', name : '[% col %]', width : 200, sortable : true}
+			[%- END %]
+		[%- END %]
+
+			//{display: 'ID', name : 'member_type_id', width : 40, sortable : true},
+			//{display: 'Member Type', name : 'member_type', width : 200, sortable : true, align: 'left'},
+			// {display: 'Rating', name : 'rating', width : 30, sortable : true, align: 'right'},
+			//{display: 'Author(s)', name : 'authors', width : 275, sortable : true, align: 'left'},
+        ],
+		searchitems : [
+		[% FOREACH col IN columns -%]
+			[% IF col != columns.last -%]
+			{display: '[% col %]', name : '[% col %]'},
+			[% ELSE %]
+			{display: '[% col %]', name : '[% col %]'}
+			[%- END %]
+		[%- END %]
+
+		//    {display: 'ID', name: 'member_type_id', isdefault: true},
+        ],
+        buttons : [
+            {name: 'Add', bclass: 'add', onpress : add_register},
+            {name: 'Edit', bclass: 'edit', onpress : edit_register},
+            {name: 'Delete', bclass: 'delete', onpress : delete_confirm},
+            {separator: true}
+		],
+		tname: "[% tablename %]",
+        sortname: "[% sortname %]",
+        sortorder: "asc",
+        usepager: true,
+        title: "[% tablename %]",
+        useRp: true,
+        rp: 10,
+        width: 940,
+        height: 260
+		});
+
+-->
+    </script>
+	</div>
+

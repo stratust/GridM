@@ -1,0 +1,26 @@
+[% # This is a TT comment.  The '-' at the end "chomps" the newline.  You won't -%]
+[% # see this "chomping" in your browser because HTML ignores blank lines, but  -%]
+[% # it WILL eliminate a blank line if you view the HTML source.  It's purely   -%]
+[%- # optional, but both the beginning and the ending TT tags support chomping. -%]
+
+[% # Provide a title -%]
+[% META title = 'Evento' -%]
+<table>
+<tr><th>Id</th><th>ID name</th><th>Desc</th></tr>
+[% # Display each entry in a table row %]
+[% FOREACH row IN rows -%]
+<tr>
+<td>[% row.evento_id %]</td>
+<td>[% row.descricao %]</td>
+<td><a href="[% c.uri_for(c.controller.action_for('edit'), [row.evento_id]) %]">Edit</a>
+</td>
+<td><a href="[% c.uri_for(c.controller.action_for('delete'), [row.evento_id]) %]">Delete</a>
+</td>
+
+</tr>
+[% END -%]
+</table>
+<p>
+      HTML::FormHandler:
+      <a href="[% c.uri_for(c.controller.action_for('create')) %]">Create</a>
+</p>

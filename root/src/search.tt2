@@ -1,0 +1,116 @@
+	<script type="text/javascript">
+	var selected_part = 0;
+	$(function() {
+		function log(message) {
+			$("<div/>").text(message).prependTo("#log");
+			$("#log").attr("scrollTop", 0);
+		}
+		
+		$("#name").autocomplete({
+			source: "/api/searchname",
+			minLength: 3,
+			select: function(event, ui) {
+				//log(ui.item ? ("Selected: " + ui.item.value + " aka " + ui.item.id) : "Nothing selected, input was " + this.value);
+
+				$('#registers_grid').flexOptions({participante: ui.item.id}); 
+				
+				selected_part = 1;
+			}
+		});
+	});
+	</script>
+<div class="ui-widget">
+	<label class="label" for="name">Nome:</label>
+	<input type="text" id="name" size="40" />
+</div>
+
+<div>
+	<label class="label" for="dia">Dia: </label>
+	<select id="dia" name="dia">
+		<option value="">--Todos--</option>
+		[% FOREACH dia IN dias -%]
+		<option value="[% dia.dia%]">[% dia.dia %]</option>
+		[%- END %]
+	</select>
+</div>
+<div>
+	<label class="label" for="sala">Sala: </label>
+	<select id="sala" name="sala">
+		<option value="">--Todos--</option>
+		[% FOREACH sala IN salas -%]
+		<option value="[% sala.sala_id%]">[% sala.descricao %]</option>
+		[%- END %]
+	</select>
+</div>
+<div>
+	<label class="label" for="evento">Evento: </label>
+	<select id="evento" name="evento">
+		<option value="">--Todos--</option>
+		[% FOREACH evento IN eventos -%]
+		<option value="[% evento.evento_id%]">[% evento.descricao %]</option>
+		[%- END %]
+	</select>
+</div>
+
+
+<div>
+	<input type="button" onclick="send();" value="Submit" />
+</div>
+ 
+   <table id="registers_grid" style="display:none">
+	</table>
+
+    <script type="text/javascript">
+<!--	
+	function send(){
+
+		$('#registers_grid').flexOptions({url: '/api/searchgrid'}); 
+		if (selected_part){
+
+			$('#registers_grid').flexOptions({dia: $('#dia').val()}); 
+			$('#registers_grid').flexOptions({sala: $('#sala').val()}); 
+			$('#registers_grid').flexOptions({evento: $('#evento').val()}); 
+			$('#registers_grid').flexOptions({page: 1}); 
+			$('#registers_grid').flexReload(); 
+		}
+		else{
+			alert("Selecione um participante");
+		}
+	}
+
+    $("#registers_grid").flexigrid({
+        url: '',
+        dataType: 'json',
+		colModel : [
+			{display: 'Nome', name : 'nome', width : 200, sortable : false}
+			,{display: 'Dia', name : 'dia', width : 25, sortable : false}
+			,{display: 'Horário', name : 'horario', width : 100, sortable : false}
+			,{display: 'Sala', name : 'sala', width : 200, sortable : false}
+			,{display: 'Evento', name : 'evento', width : 200, sortable : false}
+			,{display: 'Profissão', name : 'profissao', width : 200, sortable : false}
+
+			//{display: 'ID', name : 'member_type_id', width : 40, sortable : true},
+			//{display: 'Member Type', name : 'member_type', width : 200, sortable : true, align: 'left'},
+			// {display: 'Rating', name : 'rating', width : 30, sortable : true, align: 'right'},
+			//{display: 'Author(s)', name : 'authors', width : 275, sortable : true, align: 'left'},
+        ],
+		//searchitems : [
+		//    {display: 'ID', name: 'member_type_id', isdefault: true},
+        //],
+		tname: "",
+		dia: "",
+		sala: "",
+		evento: "",
+		participante: "",
+        sortname: "nome",
+        sortorder: "desc",
+        usepager: true,
+        title: "Search",
+        useRp: true,
+        rp: 10,
+        width: 940,
+        height: 260
+		});
+-->
+    </script>
+

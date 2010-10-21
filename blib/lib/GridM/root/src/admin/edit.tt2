@@ -1,0 +1,78 @@
+<script type="text/javascript">
+  $(document).ready(function(){
+
+  $('#outside_member\\.0').click(function(){
+
+  	$("label[for=cpf]").html("Cpf:");
+
+    $("#cpf").mask("999.999.999-99");
+
+
+  });
+
+  if ($('#outside_member\\.0').attr('checked')){
+	 $('#outside_member\\.0').click();
+  }
+
+  if ($('#outside_member\\.1').attr('checked')){
+  	$("label[for=cpf]").html("Passport Number:");
+	
+    $("#cpf").unmask();
+
+  }
+
+
+  $('#outside_member\\.1').click(function(){
+
+  	$("label[for=cpf]").html("Passport Number:");
+	
+    $("#cpf").unmask();
+    $("#cpf").attr('value', '');
+
+
+  });
+
+    $("#[% form.name  %]").validate();
+
+
+  });
+
+	$(function() {
+		$('#date').datepicker({
+			dateFormat: 'dd/mm/yy',
+			yearRange: '-150:+0',
+			//minDate: new Date(1970,1 - 1,1),
+			maxDate: '+1D',
+			changeMonth: true,
+			changeYear: true
+		});
+	});
+
+// Masking fields
+
+jQuery(function($){
+   $("#date_birth").mask("99/99/9999");
+   $("#phone").mask("(999) 9999-9999");
+   $("#fax").mask("(999) 9999-9999");
+   $("#zip_code").mask("99999-999");
+
+
+});
+
+
+</script>
+
+[% IF title %]
+<h3>[% title %]</h3>
+[% END %]
+
+[% IF form_center %]
+<div class="myform">
+[% END %]
+
+[% form.render  %]
+
+[% IF form_center%]
+</div>
+[% END %]
+
