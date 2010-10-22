@@ -12,14 +12,14 @@ has '+widget_form' => ( default => 'Simple' );
 has '+item_class' => ( default => 'Leitura' );
 
 has_field 'tag'        => ( type => 'Text', size => 30, maxlength => 30 );
-has_field 'antena_id' => (
+has_field 'antena' => (
     type     => 'Select',
     required => 1,
 	label => 'Antena',
 	label_column => 'serie',
 	empty_select => '--Escolha--',
 );
-has_field 'participante_id' => (
+has_field 'participante' => (
     type         => 'Select',
     required     => 1,
     label        => 'Participante',

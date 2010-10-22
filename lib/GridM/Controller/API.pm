@@ -58,26 +58,28 @@ sub grid_POST {
 
     my @row_aux;
 
+
+
     # formating data
     # -------------------------------------------------------------------------
-    foreach (@rsall) {
+    foreach my $row (@rsall) {
 
         my %aux;
 
         unless ( $#pks >= 1 ) {
-            $aux{'id'} = $_->$pk;
+            $aux{'id'} = $row->$pk;
         }
         else {
             my @ids;
             foreach my $primary_key (@pks) {
 
-                if ( UNIVERSAL::can( $_->$primary_key, 'can' ) ) {
+                if ( UNIVERSAL::can( $row->$primary_key, 'can' ) ) {
 
-                    push( @ids, $_->$primary_key->$primary_key );
+                    push( @ids, $row->$primary_key->$primary_key );
 
                 }
                 else {
-                    push( @ids, $_->$primary_key );
+                    push( @ids, $row->$primary_key );
                 }
 
             }
@@ -85,14 +87,23 @@ sub grid_POST {
         }
 
         foreach my $col_name (@cols) {
+            
 
-            foreach my $t ( $_->$col_name ) {
-
+            foreach my $t ( $row->$col_name ) {
                 my $ref = ref($t);
+                
+           
+                my $col_info = $rs->result_source->column_info($col_name);
+                my $relationship_name = $col_name;
 
-                if ( UNIVERSAL::can( $t, 'can' ) && $ref !~ /date/i ) {
+                $relationship_name =~ s/_id$//;
 
-                    my $text = $t->display_name . " (" . $t->$col_name . ")";
+                if ( $col_info->{'is_foreign_key'} && $ref !~ /date/i && $rs->result_source->has_relationship($relationship_name)) {
+                    
+                    $c->log->debug($col_name);
+
+                    
+                    my $text =   $row->$relationship_name->display_name . " (" . $t . ")";
 
                     push( @{ $aux{'cell'} }, $text );
 

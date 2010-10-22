@@ -8,8 +8,14 @@ all_from 'lib/GridM.pm';
 
 requires 'Catalyst::Runtime' => '5.80017';
 requires 'Catalyst::Plugin::ConfigLoader';
+requires 'Catalyst::Plugin::ConfigLoader::Multi';
 requires 'Catalyst::Plugin::Static::Simple';
+requires 'Catalyst::Plugin::Session::Store::FastMmap';
+requires 'Catalyst::Plugin::Session::State::Cookie';
+requires 'Catalyst::Plugin::Authorization::Roles';
+requires 'Catalyst::Authentication::Store::DBIx::Class';
 requires 'Catalyst::Action::RenderView';
+requires 'Catalyst::Plugin::Compress';
 requires 'Moose';
 requires 'namespace::autoclean';
 requires 'Config::General'; # This should reflect the config file format you've chosen
@@ -22,6 +28,9 @@ requires 'Catalyst::Model::DBIC::Schema';
 requires 'HTML::FormHandler';
 requires 'HTML::FormHandler::Model::DBIC';
 requires 'DBIx::Class::EncodedColumn';
+requires 'Config::JFDI';
+requires 'String::MkPasswd';
+
 
 # Se for no ubuntu instalar do DBD:Pg via apt-get:
 # apt-get install libdbd-pg-perl

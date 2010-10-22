@@ -3,6 +3,7 @@ use Moose;
 use namespace::autoclean;
 
 use Catalyst::Runtime 5.80;
+use Sys::Hostname;
 
 # Set flags and add plugins for the application
 #
@@ -13,11 +14,19 @@ use Catalyst::Runtime 5.80;
 #                 directory
 
 use Catalyst qw/
-    -Debug
-    ConfigLoader
+    ConfigLoader::Multi
     Static::Simple
 
 	Unicode::Encoding
+
+	Authentication
+	Authorization::Roles
+
+	Session
+	Session::State::Cookie
+	Session::Store::FastMmap
+
+    Compress 
 /;
 =cut	
 	Authentication
@@ -44,10 +53,41 @@ $VERSION = eval $VERSION;
 # with an external configuration file acting as an override for
 # local deployment.
 
+my ($host) = Sys::Hostname::hostname() =~ m/^([^\.]+)/;
+
 __PACKAGE__->config(
     name => 'GridM',
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
+    default_view           => 'TT',
+    'Plugin::ConfigLoader' => {
+        file                => __PACKAGE__->path_to('conf'),
+        config_local_suffix => 'gridm_' . $host,
+    },
+    ENCODING => 'utf=8',
+    static   => {
+        include_path =>
+          [ GridM->config->{root} ],
+    },
+
+    'Plugin::Authentication'                    => {
+        default => {
+            credential => {
+                class          => 'Password',
+                password_type  => 'self_check',
+                password_field => 'user_password'
+            },
+            store => {
+                class                     => 'DBIx::Class',
+                user_model                => 'GridDB::User',
+                role_relation             => 'roles',
+                role_field                => 'role',
+                use_userdata_from_session => '0'
+            }
+        }
+    },
+    email => [ 'SMTP', 'lgmb.fmrp.usp.br', ]
+
 );
 
 # Start the application

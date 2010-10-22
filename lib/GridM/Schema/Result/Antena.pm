@@ -110,6 +110,11 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-21 02:10:35
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:0xBl667pwFTPmSFUBaNl9w
 
+sub display_name{
+	my ($self) = @_;
+	return $self->serie || '';
+
+}
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 __PACKAGE__->meta->make_immutable;

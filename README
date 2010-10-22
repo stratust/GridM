@@ -1,7 +1,12 @@
 Run script/gridm_server.pl to test the application.
 
 # To generate a DB schema
-script/gridm_create.pl model Ash2010 DBIC::Schema GridM::Schema create=static components=EncodedColumn dbi:Pg:host=localhost:dbname=ash2010 grid gridT3500
+
+#From PG
+script/gridm_create.pl model GridDB DBIC::Schema GridM::Schema create=static components=EncodedColumn dbi:Pg:host=localhost:dbname=ash2010 grid gridT3500
+
+#from MySQL
+script/gridm_create.pl model GridDB DBIC::Schema GridM::Schema create=static components=EncodedColumn dbi:mysql:host=localhost:dbname=griddb root
 
 # To generate Form from HTML::FormHandler::Generator
 form_generator.pl --rs_name=Antena --schema_name=GridM::Schema --db_dsn=dbi:Pg:grid

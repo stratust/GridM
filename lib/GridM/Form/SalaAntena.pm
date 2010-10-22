@@ -10,14 +10,14 @@ has '+widget_form' => ( default => 'Simple' );
 
 has '+item_class' => ( default => 'SalaAntena' );
 
-has_field 'antena_id' => (
+has_field 'antena' => (
     type         => 'Select',
     required     => 1,
     label        => 'Antena',
     label_column => 'serie',
     empty_select => '--Escolha--'
 );
-has_field 'sala_id' => (
+has_field 'sala' => (
     type         => 'Select',
     required     => 1,
     label        => 'Sala',
