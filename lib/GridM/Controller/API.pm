@@ -100,9 +100,6 @@ sub grid_POST {
 
                 if ( $col_info->{'is_foreign_key'} && $ref !~ /date/i && $rs->result_source->has_relationship($relationship_name)) {
                     
-                    $c->log->debug($col_name);
-
-                    
                     my $text =   $row->$relationship_name->display_name . " (" . $t . ")";
 
                     push( @{ $aux{'cell'} }, $text );
@@ -321,7 +318,7 @@ sub searchgrid_POST {
     my $rs =
       $c->model("GridDB::Leitura")->search( 
 		  {}, 
-		  { order_by => { -asc => [qw/ evento.dia registro/] } } 
+		  { order_by => { -asc => [qw/ me.dia registro/] } } 
 	  );
 
 	#dia
@@ -338,21 +335,20 @@ sub searchgrid_POST {
 
 
     $rs = $rs->search(
-        { 'participante.participante_id' => $participante },
+        { 'participante.participante_id' => $participante, 'me.registro' => { -between => \'evento.inicio AND evento.fim' }, 'me.dia' => {'=' => \'evento.dia'} },
         {
             join => [
                 'participante',
                 { antena => { sala_antenas => { sala => {'evento_salas' => 'evento'} } } }
             ],
-            distinct  => 1,
             '+select' => [
                 'participante.participante_id', 'participante.nome',
                 'participante.profissao',       'sala.descricao',
-                'evento.descricao',               'evento.dia'
+                'evento.descricao',               'me.dia'
             ],
             '+as' => [ 'id', 'nome', 'profissao', 'sala', 'evento', 'dia' ],
 
-            #group_by => ['registro','me.dia'],
+            group_by => ['registro','me.dia'],
         },
     ) if ($participante);
 
@@ -377,7 +373,7 @@ sub searchgrid_POST {
 	my @aux; 
 
 	@aux = $rs->all if ($participante);
-
+    
     my $day_before;
     my $register_before;
     my $hash;
@@ -410,7 +406,6 @@ sub searchgrid_POST {
 	                push( @results, $hash );
 				}
 
-				#push( @results, $hash );
             }
         }
 
@@ -418,17 +413,19 @@ sub searchgrid_POST {
         $day_before      = $_->get_column('dia');
         $register_before = $_->registro;
     }
-	push (@results,$hash);
+	push (@results,$hash) if $hash;
+    $c->log->debug($#results);
    	@results = reverse @results;
 	my $start = ($rows * $page) - $rows;
 	my $end = ($rows * $page) -1;
-	if ($#results < $end){
+	if ($#results  <  $end){
 		$end = $#results;
 	}
-	$c->log->debug("start: ".$start."  end:".$end);	
+    #$c->log->debug("start: ".$start."  end:".$end);	
 	my @results_slice = @results[$start..$end];	
 
-	if ($participante &&  $#results_slice > 0){
+    #$c->log->debug($#results_slice);
+	if ($participante &&  $#results_slice >= 0 ){
 	$data{rows} = [
         map {
             +{

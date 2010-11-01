@@ -89,6 +89,9 @@ __PACKAGE__->has_many(
 # Created by DBIx::Class::Schema::Loader v0.07002 @ 2010-10-21 02:10:35
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:suCZ9nhNt9t+BfeyRyDBxg
 
+
+__PACKAGE__->many_to_many( eventos => 'evento_salas', 'evento' );
+
 sub display_name{
 	my ($self) = @_;
 	return $self->descricao || '';
