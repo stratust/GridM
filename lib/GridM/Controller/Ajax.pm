@@ -156,7 +156,7 @@ sub form {
 
 }
 
-sub search : Local CatptureArgs(2) {
+sub search : Local {
     my ( $self, $c ) = @_;
     
 	$c->stash( template => 'search.tt2');
@@ -193,4 +193,40 @@ sub search : Local CatptureArgs(2) {
 
 }
 
+sub report : Local {
+    my ( $self, $c ) = @_;
+    
+	$c->stash( template => 'report.tt2');
+
+	# Searching days
+    my $evento_rs = $c->model('GridDB::Evento')->search( 
+			{}, 
+			{ columns => ['dia'],
+				group_by => ['dia'], 
+				order_by => 'dia asc' }
+		);
+	my @dias = $evento_rs->all;
+	$c->stash( dias => \@dias);
+	
+
+	# Eventos
+	$evento_rs = $c->model('GridDB::Evento')->search( 
+			{}, 
+			{ 
+				order_by => 'me.descricao asc' }
+		);
+	my @eventos = $evento_rs->all;
+	$c->stash( eventos => \@eventos);
+
+	# Salas
+	my $sala_rs = $c->model('GridDB::Sala')->search( 
+			{}, 
+			{ 
+				order_by => 'me.descricao asc' }
+		);
+	my @salas = $sala_rs->all;
+	$c->stash( salas => \@salas);
+
+
+}
 1;

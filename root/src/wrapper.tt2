@@ -29,6 +29,7 @@
 <div class="menu bubplastic horizontal aqua">
 	<ul>
 		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/search') %]"><span class="menu_ar">Advanced Search</span></a></span></li>
+		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/report') %]"><span class="menu_ar">Relatorio</span></a></span></li>
 		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/evento') %]"><span class="menu_ar">Evento</span></a></span></li>
 		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/sala') %]"><span class="menu_ar">Sala</span></a></span></li>
 		<li><span class="menu_r"><a href="[% c.uri_for('/ajax/salaantena') %]"><span class="menu_ar">Sala Antena</span></a></span></li>
